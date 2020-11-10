@@ -26,6 +26,7 @@ async function userAuthViaToken(req, res, next) {
   try {
     const user = await verifyJwt(token)
     req.user = user
+    
     return next()
   } catch (err) {
     res.status(403).send({

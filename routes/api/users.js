@@ -2,7 +2,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { createUser , verifyUser} from '../../controllers/users.js';
 
-
 const router = express.Router();
 
 router.post('/', async (req, res)=>{
@@ -23,5 +22,6 @@ router.post('/login', async (req, res) => {
       })
     }
   })
+
 
 export default router ; 

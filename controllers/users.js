@@ -35,6 +35,8 @@ async function createUser(userOpts) {
   }
 }
 
+
+
 async function verifyUser(userOpts) {
   if (!userOpts.email) {
     throw new Error('Did not supply email')
@@ -68,7 +70,44 @@ async function verifyUser(userOpts) {
 }
 
 
+async function updateUser(userOpts) {
+  console.log(userOpts);
+  const user = await Users.findOne({
+    attributes: ['email', 'username', 'bio', 'image', 'password'],
+    where: {
+         email:  userOpts.email 
+    }
+  })
+
+  if (!user) {
+    throw new Error('No user with given email address')
+  }
+  console.log("user");
+  console.log(user.dataValues);
+  console.log("user");
+  
+  const updatedUser = await Users.update(userOpts, {
+    where: {
+      email : userOpts.email 
+    }
+  });
+  console.log(updatedUser)
+
+  const useru = await Users.findOne({
+    attributes: ['email', 'username', 'bio', 'image', 'password'],
+    where: {
+         email:  userOpts.email 
+    }
+  })
+
+  // delete updatedUser.password
+  console.log(useru)
+  // return updatedUser;
+  return useru;
+}
+
 export {
     createUser,
+    updateUser,
     verifyUser
 }
