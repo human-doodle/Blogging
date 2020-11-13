@@ -79,12 +79,16 @@ const Users = db.define('user', {
   Tags.belongsToMany(Articles, { through: 'article_tags' })
   
   Users.belongsToMany(Users, {
-    through: 'Following',
+    through: 'Follow_table',
     as: 'Follower',
-    foreignKey: 'following_id',
+    foreignKey: 'follower_id',
+  });
+  Users.belongsToMany(Users, {
+    through: 'Follow_table',
+    as: 'Following',
+    foreignKey: 'Following_id',
   });
 
-  
   export {
     db,
     Users, Articles, Comments, Tags
