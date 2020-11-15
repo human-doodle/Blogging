@@ -1,4 +1,7 @@
-import { Users } from '../models/index.js';
+import { Users, db } from '../models/index.js';
+import sequelize from 'sequelize';
+import pkg from 'sequelize';
+const { QueryTypes } = pkg;
 
 
 async function displayProfile(luser, userOpts){
@@ -35,6 +38,53 @@ async function displayProfile(luser, userOpts){
 return profile;
 }
 
+
+async function followProfile(luser, userOpts){
+
+ try{
+    const p = await db.query(
+      'INSERT INTO follow_table VALUES (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, :a, :b );',
+      {
+        replacements:{ a: userOpts.username,
+        b: luser},
+        
+      }
+    );
+      console.log(JSON.stringify(p, null, 2));
+    }catch (err) {
+      
+        errors: {
+          body: [ err.message ]
+        }
+      
+    }
+ 
+  } 
+   
+ 
+  async function unfollowProfile(luser, userOpts){
+  try{
+      const p = await db.query(
+        'DELETE FROM follow_table where follower_id = :a and following_id = :b ;',
+        {
+          replacements:{ a: userOpts.username,
+          b: luser},
+          
+        }
+      );
+        console.log(JSON.stringify(p, null, 2));
+      }catch (err) {
+        
+          errors: {
+            body: [ err.message ]
+          }
+        
+      }
+   
+    } 
+
 export{
-    displayProfile
+    displayProfile,
+    followProfile,
+    unfollowProfile
 };
