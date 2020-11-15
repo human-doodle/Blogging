@@ -8,7 +8,8 @@ const router = express.Router();
 
 router.get('/', userAuthViaToken, (req, res) => {
   if (req.user) {
-    // 
+    delete (req.user.password)
+    delete (req.user.iat)
     res.send(req.user)
   }
 })

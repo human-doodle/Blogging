@@ -61,11 +61,11 @@ async function verifyUser(userOpts) {
   }
   
   const token = await createJwt(user.get())
-  const userJson = {
+  const userJson = {user:{
     ...user.get(),
     token
-  }
-  delete userJson.password
+  }}
+  delete userJson.user.password
   return userJson
 }
 
@@ -82,9 +82,9 @@ async function updateUser(userOpts) {
   if (!user) {
     throw new Error('No user with given email address')
   }
-  console.log("user");
-  console.log(user.dataValues);
-  console.log("user");
+  // console.log("user");
+  // console.log(user.dataValues);
+  // console.log("user");
   
   const updatedUser = await Users.update(userOpts, {
     where: {
@@ -93,14 +93,13 @@ async function updateUser(userOpts) {
   });
   console.log(updatedUser)
 
-  const useru = await Users.findOne({
-    attributes: ['email', 'username', 'bio', 'image', 'password'],
+  const useru = {user: await Users.findOne({
+    attributes: ['email', 'username', 'bio', 'image'],
     where: {
          email:  userOpts.email 
     }
-  })
+  })}
 
-  // delete updatedUser.password
   console.log(useru)
   // return updatedUser;
   return useru;
