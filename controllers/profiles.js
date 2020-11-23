@@ -1,5 +1,4 @@
 import { Users, db } from '../models/index.js';
-import sequelize from 'sequelize';
 import pkg from 'sequelize';
 const { QueryTypes } = pkg;
 

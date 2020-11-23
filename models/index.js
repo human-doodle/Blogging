@@ -75,8 +75,8 @@ const Users = db.define('user', {
   Articles.belongsToMany(Users, { through: 'favourites' })
   Users.belongsToMany(Articles, { through: 'favourites' })
   
-  Articles.belongsToMany(Tags, { through: 'article_tags' })
-  Tags.belongsToMany(Articles, { through: 'article_tags' })
+  Articles.belongsToMany(Tags, { through: 'article_tags'})
+  Tags.belongsToMany(Articles, { through: 'article_tags'})
   
 
   Users.belongsToMany(Users, {
