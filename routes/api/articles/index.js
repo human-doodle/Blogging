@@ -1,5 +1,5 @@
 import express from 'express';
-import {returnArticles, feedArticles, getArticles, createArticles} from '../../../controllers/articles.js'
+import {returnArticles, feedArticles, getArticles, createArticles, updateArticles, deleteArticles} from '../../../controllers/articles.js'
 import { userAuthViaToken } from '../../../middlewares/auth.js'
 
 import commentsRoutes from './comments.js';
@@ -81,4 +81,35 @@ router.get('/',userAuthViaToken, async(req, res)=>{
           
             });
 
+
+            // PUT /api/articles/:slug
+  router.put('/:slug',userAuthViaToken, async(req, res)=>{
+    try{  console.log( req.body.article)
+        const slug= await updateArticles(req.params, req.body.article);
+        const articles = await getArticles(req.user.username,slug);
+        res.json(articles);
+        } catch (err) {
+            res.status(403).send({
+            errors: {
+                body: [ err.message ]
+                        }
+                    });
+            }
+    });
+
+    // DELETE /api/articles/:slug
+    router.delete('/:slug',userAuthViaToken, async(req, res)=>{
+        try{  console.log( req.body.article)
+            const articles= await deleteArticles(req.params);
+            
+            res.json(articles);
+            } catch (err) {
+                res.status(403).send({
+                errors: {
+                    body: [ err.message ]
+                            }
+                        });
+                }
+        });
+        
 export default router ;

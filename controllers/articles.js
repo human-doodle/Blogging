@@ -169,12 +169,16 @@ async function getArticles(luser,id){
         required: true,
          });
 
+         console.log(articles)
+            if(typeof articles.dataValues.tag != 'undefined' ){
             //  set the tagList
             var temp = []
+            if(typeof articles.dataValues.tag != []){
             articles.dataValues.tags.forEach(e=>temp.push(e.name));
             articles.dataValues["tagList"] = temp
             console.log(articles.dataValues["tagList"])
-
+            }
+            }
             // set favourites and number of favouritesCount
             var fCount= 0
             var f = false
@@ -243,6 +247,68 @@ const art_tags = await db.query(
 }
 }
 return {slug : s}
+}
+
+async function updateArticles(id, userOpts){
+    // whereCondition = {}
+    console.log(userOpts)
+    if(typeof userOpts.title != 'undefined'){
+        var s = slug(userOpts.title)
+        userOpts['slug'] = s
+    }
+
+    const updatedArticle = await Articles.update(userOpts, {
+        where: {
+          slug : id.slug
+        }
+      });
+      const updatedArticle_tags = await db.query(
+        'UPDATE article_tags SET articleSlug = :a WHERE articleSlug = :b ;',
+          {
+            replacements:{ a: s,
+            b: id.slug},
+            
+          })
+      
+      console.log(updatedArticle)
+      console.log(updatedArticle_tags)
+
+      const article = Articles.findOne({where : {slug : s}}) 
+      return({slug : s})
+
+}
+
+async function deleteArticles(id){
+    try{const deletedArticle_tags = await db.query(
+        'DELETE FROM article_tags WHERE articleSlug = :b ;',
+          {
+            replacements:{ 
+            b: id.slug},
+            
+          })
+    const deleted = await Articles.destroy({
+        where: {
+            slug : id.slug
+        }
+    })
+    
+    console.log(deleted)
+    console.log(deletedArticle_tags)
+    
+        return({message : "Deleted"})
+    
+    
+}catch(err) {
+        res.status(403).send({
+        errors: {
+            body: [ err.message ]
+                    }
+                });
+    }
+      
+      
+
+    //   return({message : "Deleted"})
 
 }
 
@@ -251,4 +317,7 @@ export{
     feedArticles,
     getArticles,
     createArticles,
+    updateArticles,
+    deleteArticles
+    
 }
